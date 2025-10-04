@@ -1,18 +1,24 @@
-import fetch from 'node-fetch';
+const fetch = require('node-fetch');
 
-export async function handler(event) {
+exports.handler = async (event) => {
   const { token, repo, path, data } = JSON.parse(event.body);
-  const res = await fetch(`https://api.github.com/repos/YOUR_USERNAME/${repo}/contents/${path}`, {
-    method:'PUT',
-    headers:{
-      Authorization:`token ${token}`,
-      'Content-Type':'application/json'
+
+  const content = Buffer.from(JSON.stringify(data, null, 2)).toString('base64');
+
+  // GitHub APIでファイル作成/更新
+  const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3+json'
     },
     body: JSON.stringify({
-      message:'Update game data',
-      content: Buffer.from(JSON.stringify(data)).toString('base64')
+      message: `Save game data for ${data.user}`,
+      content,
+      branch: 'main'
     })
   });
   const result = await res.json();
-  return { statusCode: 200, body: JSON.stringify(result) };
-}
+
+  return { statusCode:200, body: JSON.stringify(result) };
+};

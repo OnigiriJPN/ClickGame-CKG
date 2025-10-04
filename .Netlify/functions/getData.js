@@ -1,12 +1,17 @@
-import fetch from 'node-fetch';
+const fetch = require('node-fetch');
 
-export async function handler(event) {
+exports.handler = async (event) => {
   const { token, repo, path } = JSON.parse(event.body);
-  const res = await fetch(`https://api.github.com/repos/YOUR_USERNAME/${repo}/contents/${path}`, {
-    headers: { Authorization:`token ${token}` }
+
+  const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3.raw'
+    }
   });
-  const json = await res.json();
-  let content = {};
-  if(json.content) content = JSON.parse(Buffer.from(json.content,'base64').toString());
-  return { statusCode:200, body: JSON.stringify(content) };
-}
+
+  if(res.status === 404) return { statusCode:200, body: JSON.stringify({}) };
+
+  const data = await res.json().catch(()=>({}));
+  return { statusCode:200, body: JSON.stringify(data) };
+};
