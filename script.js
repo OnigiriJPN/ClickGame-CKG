@@ -1,3 +1,9 @@
+import { loadAd } from './ninjaadmax.js';
+
+// 初回ロード
+window.addEventListener('load', ()=> loadAd('ad'));
+
+
 let score=0, slots=[], accessToken='', teamId='default', userName='';
 
 const scoreEl=document.getElementById('score');
