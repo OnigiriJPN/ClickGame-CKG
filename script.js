@@ -22,7 +22,7 @@ const bgm=document.getElementById('bgm');
 const tapSound=document.getElementById('tapSound');
 const slotSound=document.getElementById('slotSound');
 
-const clientId='YOUR_GITHUB_CLIENT_ID';
+const clientId='Ov23liVLXTuwPP1PIcco';
 const redirectUri=window.location.origin+window.location.pathname;
 
 // --- GitHub OAuth ---
@@ -31,7 +31,7 @@ const urlParams=new URLSearchParams(window.location.search);
 const code=urlParams.get('code');
 
 if(code){
-  fetch('/.netlify/functions/getToken',{method:'POST',body:JSON.stringify({code})})
+  fetch('/.Netlify/functions/getToken',{method:'POST',body:JSON.stringify({code})})
   .then(res=>res.json())
   .then(data=>{
     accessToken=data.token;
@@ -105,12 +105,12 @@ deleteSlotBtn.addEventListener('click',()=>{
 // --- 保存 ---
 saveBtn.addEventListener('click',()=>{
   if(!accessToken) return alert('GitHubログインしてください');
-  fetch('/.netlify/functions/saveData',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'gameData.json', data:{ user:userName, score, slots, teamId } })}).then(res=>res.json()).then(()=>alert('保存完了'));
+  fetch('/.Netlify/functions/saveData',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'gameData.json', data:{ user:userName, score, slots, teamId } })}).then(res=>res.json()).then(()=>alert('保存完了'));
 });
 
 // --- データ読み込み ---
 function loadGameData(){
-  fetch('/.netlify/functions/getData',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'gameData.json' })})
+  fetch('/.Netlify/functions/getData',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'gameData.json' })})
   .then(res=>res.json())
   .then(data=>{
     if(data.score) score=data.score;
@@ -122,7 +122,7 @@ function loadGameData(){
 
 // --- ランキング ---
 function loadRanking(){
-  fetch('/.netlify/functions/getData',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'ranking.json' })})
+  fetch('/.Netlify/functions/getData',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'ranking.json' })})
   .then(res=>res.json())
   .then(data=>{
     const arr=data||[];
@@ -134,7 +134,7 @@ function loadRanking(){
 // --- ランキング保存 ---
 function saveRanking(userScore){
   if(!accessToken) return;
-  fetch('/.netlify/functions/saveRanking',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'ranking.json', user:userName, score:userScore, teamId:teamId })})
+  fetch('/.Netlify/functions/saveRanking',{method:'POST',body:JSON.stringify({ token:accessToken, repo:'YOUR_REPO_NAME', path:'ranking.json', user:userName, score:userScore, teamId:teamId })})
   .then(res=>res.json()).then(()=>loadRanking());
 }
 
